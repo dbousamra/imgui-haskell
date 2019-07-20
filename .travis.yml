@@ -8,9 +8,9 @@ language: c
 addons:
   apt:
     packages:
-    - libsdl2
+    - libsdl2-dev
     - libglu1-mesa-dev
-    - freeglut3-dev -
+    - freeglut3-dev
     - mesa-common-dev
 
 before_install:
