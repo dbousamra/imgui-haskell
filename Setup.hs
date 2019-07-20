@@ -1,7 +1,8 @@
 import           Distribution.Simple
 import           Distribution.Simple.Setup
-import           Distribution.Simple.Utils (copyFileVerbose, die', findFileWithExtension,
-                                            rawSystemExit)
+import           Distribution.Simple.Utils (copyFileVerbose,
+                                            createDirectoryIfMissingVerbose, die',
+                                            findFileWithExtension, rawSystemExit)
 import           Distribution.Verbosity
 import           System.FilePath
 main = defaultMainWithHooks simpleUserHooks
@@ -27,6 +28,7 @@ makeCImguiLib verbosity makeCommand = do
 
 copyCImguiLib :: Verbosity -> IO ()
 copyCImguiLib verbosity = do
+  createDirectoryIfMissingVerbose verbosity True "external/lib"
   file <- findFileWithExtension ["so", "dylib", "dll"] ["external/cimgui"] "cimgui"
   case file of
     Just lib ->
