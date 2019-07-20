@@ -27,12 +27,13 @@ makeCImguiLib verbosity makeCommand = do
 
 copyCImguiLib :: Verbosity -> IO ()
 copyCImguiLib verbosity = do
-  file <- findFileWithExtension ["so", "dylib"] ["external/cimgui"] "cimgui"
+  file <- findFileWithExtension ["so", "dylib", "dll"] ["external/cimgui"] "cimgui"
   case file of
     Just lib ->
       case takeFileName lib of
         "cimgui.dylib" -> copyFileVerbose verbosity lib "external/lib/libcimgui.dylib"
         "cimgui.so"    -> copyFileVerbose verbosity lib "external/lib/libcimgui.so"
+        "cimgui.dll"   -> copyFileVerbose verbosity lib "external/lib/libcimgui.dll"
     Nothing  -> die' verbosity "Could not find library"
 
 deleteCImguiLib :: Verbosity -> IO ()
