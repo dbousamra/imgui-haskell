@@ -15,11 +15,11 @@ addons:
     - freeglut3-dev
     - mesa-common-dev
 
-before_install:
+# before_install:
 # Download and unpack the stack executable
-- mkdir -p ~/.local/bin
-- export PATH=$HOME/.local/bin:$PATH
-- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+# - mkdir -p ~/.local/bin
+# - export PATH=$HOME/.local/bin:$PATH
+# - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
 # This line does all of the work: installs GHC if necessary, builds the
 # library, executables, and test suites, and runs the test suites.
