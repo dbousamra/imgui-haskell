@@ -3,7 +3,7 @@ sudo: false
 
 dist: bionic
 
-language: generic
+language: c
 
 addons:
   apt:
