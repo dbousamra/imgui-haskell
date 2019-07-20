@@ -19,8 +19,7 @@ main = do
     SDL.createWindow
       "SDL / OpenGL Example"
       SDL.defaultWindow {
-        SDL.windowInitialSize = V2 1024 768,
-        SDL.windowGraphicsContext  = SDL.OpenGLContext SDL.defaultOpenGL
+        SDL.windowInitialSize = V2 1024 768
       }
   SDL.showWindow window
   glContext <- SDLRaw.glCreateContext wp

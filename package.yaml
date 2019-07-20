@@ -9,7 +9,6 @@ copyright: "2019 Author name here"
 build-type: Custom
 extra-source-files:
   - README.md
-  - ChangeLog.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -56,6 +55,6 @@ executables:
       - -with-rtsopts=-N
     dependencies:
       - imgui-haskell
-      - sdl2 == 2.5.0.0
+      - sdl2
       - linear
       - OpenGL
