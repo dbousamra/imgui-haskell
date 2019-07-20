@@ -6,6 +6,7 @@ author: "Author name here"
 maintainer: "example@example.com"
 copyright: "2019 Author name here"
 
+build-type: Custom
 extra-source-files:
   - README.md
   - ChangeLog.md
@@ -28,15 +29,18 @@ library:
   dependencies:
     - sdl2
   c-sources:
-    - external/src/gl3w.c
-    - external/src/imgui_impl_sdl.cpp
-    - external/src/imgui_impl_opengl3.cpp
+    - external/gl3w/src/gl3w.c
+    - external/impl/src/imgui_impl_sdl.cpp
+    - external/impl/src/imgui_impl_opengl3.cpp
   include-dirs:
-    - external/include
+    - external/gl3w/include
+    - external/impl/include
+    - external/cimgui
+    - external/cimgui/imgui
   extra-libraries:
     - stdc++
-    - cimgui
     - SDL2
+    - cimgui
   frameworks:
     - OpenGL
   cc-options:

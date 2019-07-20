@@ -8,5 +8,3 @@ extra-deps:
 
 extra-lib-dirs:
   - external/lib
-# extra-include-dirs:
-#   - external/lib
