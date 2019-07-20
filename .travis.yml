@@ -3,8 +3,7 @@ sudo: false
 
 dist: bionic
 
-# Choose a lightweight base image; we provide our own build tools.
-language: haskell
+language: generic
 
 # GHC depends on GMP. You can add other dependencies here as well.
 addons:
@@ -15,17 +14,19 @@ addons:
     - freeglut3-dev
     - mesa-common-dev
 
-# before_install:
-# Download and unpack the stack executable
-# - mkdir -p ~/.local/bin
-# - export PATH=$HOME/.local/bin:$PATH
-# - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+before_install:
+  # Download and unpack the stack executable
+  - mkdir -p ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+  - travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
-# This line does all of the work: installs GHC if necessary, builds the
-# library, executables, and test suites, and runs the test suites.
-# `--no-terminal works` around some quirks in Travis's terminal implementation.
-script: 
-- stack --no-terminal --install-ghc test
+install:
+  # Build dependencies
+  - stack --no-terminal --install-ghc test --only-dependencies
+
+script:
+  # Build the package, its tests, and its docs and run the tests
+  - stack --no-terminal test --haddock --no-haddock-deps
 
 # Caching so the next build will be fast too.
 cache:
