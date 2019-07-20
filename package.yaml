@@ -2,17 +2,18 @@ name: imgui-haskell
 version: 0.1.0.0
 github: "githubuser/imgui-haskell"
 license: BSD3
-author: "Author name here"
-maintainer: "example@example.com"
-copyright: "2019 Author name here"
+author: "Dominic Bou-Sa,ra"
+maintainer: "dominic.bou.samra@gmail.com"
+copyright: "2019 Dominic Bou-Samra"
 
 build-type: Custom
 extra-source-files:
   - README.md
+  - external/**/*
 
 # Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis: Binding to the Dear Imgui graphical user interface library
+category: Graphics
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
