@@ -1,8 +1,9 @@
 import           Distribution.Simple
 import           Distribution.Simple.Setup
-import           Distribution.Simple.Utils (rawSystemExit)
+import           Distribution.Simple.Utils (copyFileVerbose, die', findFileWithExtension,
+                                            rawSystemExit)
 import           Distribution.Verbosity
-
+import           System.FilePath
 main = defaultMainWithHooks simpleUserHooks
     { preConf = \args flags -> do
         let verbosity = (fromFlag $ configVerbosity flags)
@@ -26,12 +27,17 @@ makeCImguiLib verbosity makeCommand = do
 
 copyCImguiLib :: Verbosity -> IO ()
 copyCImguiLib verbosity = do
-  runCommand verbosity ["mkdir", "-p", "external/lib"]
-  runCommand verbosity ["cp", "external/cimgui/cimgui.dylib", "external/lib/libcimgui.dylib"]
+  file <- findFileWithExtension ["so", "dylib"] ["external/cimgui"] "cimgui"
+  case file of
+    Just lib ->
+      case takeFileName lib of
+        "cimgui.dylib" -> copyFileVerbose verbosity lib "external/lib/libcimgui.dylib"
+        "cimgui.so"    -> copyFileVerbose verbosity lib "external/lib/libcimgui.so"
+    Nothing  -> die' verbosity "Could not find library"
 
 deleteCImguiLib :: Verbosity -> IO ()
 deleteCImguiLib verbosity = do
-  runCommand verbosity ["rm", "external/lib/libcimgui.dylib"]
+  runCommand verbosity ["rm", "external/lib"]
 
 runCommand :: Verbosity -> [String] -> IO ()
 runCommand verbosity command =
