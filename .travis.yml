@@ -10,7 +10,6 @@ addons:
     packages:
       - libsdl2-dev
       - libglu1-mesa-dev
-      - libopengl-dev
       - freeglut3
       - freeglut3-dev
       - mesa-common-dev
