@@ -4,7 +4,7 @@ module Main where
 
 import           Control.Monad             (unless)
 import qualified Graphics.Rendering.OpenGL as GL
-import qualified Lib                       as Imgui
+import qualified Imgui                     as Imgui
 import           SDL                       (($=))
 import qualified SDL                       as SDL
 import qualified SDL.Internal.Types        as SDL

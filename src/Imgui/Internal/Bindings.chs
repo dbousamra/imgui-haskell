@@ -10,7 +10,7 @@
 
 {# context lib="cimgui" #}
 
-module Lib where
+module Imgui.Internal.Bindings where
 
 import Foreign.C
 import Foreign.Ptr

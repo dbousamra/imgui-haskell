@@ -27,6 +27,9 @@ install:
 script:
   # Build the package, its tests, and its docs and run the tests
   - stack --no-terminal test --haddock --no-haddock-deps
+  # Sdist and check it works
+  - stack --no-terminal sdist --test-tarball
+
 
 # Caching so the next build will be fast too.
 cache:

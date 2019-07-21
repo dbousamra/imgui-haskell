@@ -1,6 +1,6 @@
 name: imgui-haskell
 version: 0.1.0.0
-github: "githubuser/imgui-haskell"
+github: "dbousamra/imgui-haskell"
 license: BSD3
 author: "Dominic Bou-Sa,ra"
 maintainer: "dominic.bou.samra@gmail.com"
@@ -26,6 +26,9 @@ dependencies:
 library:
   source-dirs: src
   build-tools: c2hs
+  exposed-modules:
+    - Imgui
+    - Imgui.Internal.Bindings
   dependencies:
     - sdl2
   c-sources:
