@@ -55,6 +55,25 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 {# fun igPopStyleColor as popStyleColor { `Int' } -> `()' #}
 
 
+{#fun unsafe igSliderFloat as sliderFloat
+  { `String'
+  , `Float' peekReal*
+  , `Float'
+  , `Float'
+  , `String'
+  , `Float'
+  } -> `()' #}
+
+-- {#fun unsafe igSliderFloat2 as sliderFloat2
+--   { `String'
+--   , withArrayConvReal * `[Float]' peekIntegralArray2*
+--   , `Float'
+--   , `Float'
+--   , `String'
+--   , `Float'
+--   } -> `()' #}
+
+
 {#fun unsafe igSliderInt as sliderInt
   { `String'
   , `Int' peekIntegral*
@@ -65,7 +84,7 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 
 {#fun unsafe igSliderInt2 as sliderInt2
   { `String'
-  , withArrayConvI * `[Int]' peekArray2*
+  , withArrayConvIntegral * `[Int]' peekIntegralArray2*
   , `Int'
   , `Int'
   , `String'
@@ -73,7 +92,7 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 
 {#fun unsafe igSliderInt3 as sliderInt3
   { `String'
-  , withArrayConvI * `[Int]' peekArray3*
+  , withArrayConvIntegral * `[Int]' peekIntegralArray3*
   , `Int'
   , `Int'
   , `String'
@@ -81,7 +100,7 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 
 {#fun unsafe igSliderInt4 as sliderInt4
   { `String'
-  , withArrayConvI * `[Int]' peekArray4*
+  , withArrayConvIntegral * `[Int]' peekIntegralArray4*
   , `Int'
   , `Int'
   , `String'
@@ -120,24 +139,38 @@ cFromEnum  = fromIntegral . fromEnum
 cToFloat :: (Real i, Fractional e) => i -> e
 cToFloat = realToFrac
 
--- | Peek from pointer then cast to another integral type.
 peekIntegral :: (Integral a, Storable a, Integral b) => Ptr a -> IO b
 peekIntegral = (fromIntegral <$>) . peek
 
-{-# SPECIALIZE peekIntegral :: Ptr CInt -> IO Int #-}
+peekReal :: (Real a, Storable a, Fractional b) => Ptr a -> IO b
+peekReal = fmap realToFrac . peek
 
-withArrayConvI :: [Int] -> (Ptr CInt -> IO a) -> IO a
-withArrayConvI = withArray . map fromIntegral
+withArrayConvIntegral :: (Integral a, Storable a, Integral b) => [b] -> (Ptr a -> IO c) -> IO c
+withArrayConvIntegral = withArray . map fromIntegral
 
-peekArrayN :: Int -> Ptr CInt -> IO [Int]
-peekArrayN n d = map fromIntegral `fmap` peekArray n d
+withArrayConvReal :: [Float] -> (Ptr CFloat -> IO a) -> IO a
+withArrayConvReal = withArray . map realToFrac
 
-peekArray2 :: Ptr CInt -> IO [Int]
-peekArray2 d = peekArrayN 2 d
+peekIntegralArray :: (Integral a, Storable a, Num b) => Int -> Ptr a -> IO [b]
+peekIntegralArray n = fmap (map fromIntegral) . peekArray n
 
-peekArray3 :: Ptr CInt -> IO [Int]
-peekArray3 d = peekArrayN 3 d
+peekIntegralArray2 :: (Integral a, Storable a, Num b) => Ptr a -> IO [b]
+peekIntegralArray2 = peekIntegralArray 2
 
-peekArray4 :: Ptr CInt -> IO [Int]
-peekArray4 d = peekArrayN 4 d
+peekIntegralArray3 :: (Integral a, Storable a, Num b) => Ptr a -> IO [b]
+peekIntegralArray3 = peekIntegralArray 3
 
+peekIntegralArray4 :: (Integral a, Storable a, Num b) => Ptr a -> IO [b]
+peekIntegralArray4 = peekIntegralArray 4
+
+peekRealArray :: (Real a, Storable a, Fractional b) => Int -> Ptr a -> IO [b]
+peekRealArray n = fmap (map realToFrac) . peekArray n
+
+peekRealArray2 :: (Real a, Storable a, Fractional b) => Ptr a -> IO [b]
+peekRealArray2 = peekRealArray 2
+
+peekRealArray3 :: (Real a, Storable a, Fractional b) => Ptr a -> IO [b]
+peekRealArray3 = peekRealArray 3
+
+peekRealArray4 :: (Real a, Storable a, Fractional b) => Ptr a -> IO [b]
+peekRealArray4 = peekRealArray 4
