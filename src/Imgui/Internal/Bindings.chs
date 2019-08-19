@@ -31,24 +31,35 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 {#pointer *ImDrawData as ImDrawData  #}
 {#pointer *ImGuiContext as ImGuiContext  #}
 {#pointer *ImGuiIO as ImGuiIO #}
+{#pointer *ImGuiStyle as ImGuiStyle #}
 {#pointer *ImGuiWindowFlags as ImGuiWindowFlags  #}
 
 -- Imgui functions
-{# fun igGetVersion as getVersion { } -> `String' #}
-{# fun igCreateContext as createContext_ { `ImFontAtlas'  } -> `ImGuiContext' #}
+{# fun igCreateContext as createContext_ { `ImFontAtlas' } -> `ImGuiContext' #}
+{# fun igDestroyContext as destroyContext { `ImGuiContext' } -> `()' #}
+{# fun igGetCurrentContext as getCurrentContext { } -> `ImGuiContext' #}
+{# fun igSetCurrentContext as setCurrentContext { `ImGuiContext' } -> `()' #}
 {# fun igGetIO as getIO { } -> `ImGuiIO' #}
+{# fun igGetStyle as getStyle { } -> `ImGuiStyle' #}
 {# fun igNewFrame as newFrame { } -> `()' #}
+{# fun igEndFrame as endFrame { } -> `()' #}
 {# fun igRender as render { } -> `()' #}
 {# fun igGetDrawData as getDrawData { } -> `ImDrawData' #}
+{# fun igShowDemoWindow as showDemoWindow { `Bool' } -> `()' #}
+{# fun igShowAboutWindow as showAboutWindow { `Bool' } -> `()' #}
+{# fun igShowMetricsWindow as showMetricsWindow { `Bool' } -> `()' #}
+{# fun igShowStyleEditor as showStyleEditor { `ImGuiStyle' } -> `()' #}
+{# fun igShowStyleSelector as showStyleSelector { `String' } -> `Bool' #}
+{# fun igShowFontSelector as showFontSelector { `String' } -> `()' #}
+{# fun igShowUserGuide as showUserGuide { } -> `()' #}
+{# fun igGetVersion as getVersion { } -> `String' #}
+
 {# fun igBegin as begin { `String', `Int', `Int' } -> `()' #}
 {# fun igEnd as end { } -> `()' #}
 {# fun igButton as button {`String', %`ImVec2Ptr'} -> `Bool'#}
 {# fun igText as text { `String' } -> `()' #}
 
-{# fun igShowDemoWindow as showDemoWindow { `Bool' } -> `()' #}
-{# fun igShowMetricsWindow as showMetricsWindow { `Bool' } -> `()' #}
-{# fun igShowAboutWindow as showAboutWindow { `Bool' } -> `()' #}
-{# fun igShowUserGuide as showUserGuide { } -> `()' #}
+
 
 
 {# fun igPushStyleColor as pushStyleColor { cFromEnum `ImGuiCol', %`ImVec4Ptr' } -> `()' #}
@@ -91,6 +102,14 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
   , `Float'
   } -> `()' #}
 
+{#fun unsafe igSliderAngle as sliderAngle
+  { `String'
+  , `Float' peekReal*
+  , `Float'
+  , `Float'
+  , `String'
+  } -> `()' #}
+
 {#fun unsafe igSliderInt as sliderInt
   { `String'
   , `Int' peekIntegral*
@@ -123,7 +142,18 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
   , `String'
   } -> `()' #}
 
+{#fun unsafe igColorPicker3 as colorPicker3
+  { `String'
+  , withArrayConvReal * `[Float]' peekRealArray3*
+  , cFromEnum `ImGuiColorEditFlags'
+  } -> `()' #}
 
+{#fun unsafe igColorPicker4 as colorPicker4
+  { `String'
+  , withArrayConvReal * `[Float]' peekRealArray4*
+  , cFromEnum `ImGuiColorEditFlags'
+  , `Float'
+  } -> `()' #}
 
 -- Creating structs
 {# fun pure ImVec2_ImVec2Float as makeImVec2 {`Float', `Float'} -> `ImVec2Ptr'#}

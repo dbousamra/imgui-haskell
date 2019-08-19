@@ -34,13 +34,14 @@ runImGuiApp app = do
   SDL.showWindow window
   glContext <- SDLRaw.glCreateContext wp
   ImGui.gl3wInit
-  ImGui.createContext Nothing
+  imguiContext <- ImGui.createContext Nothing
   ImGui.getIO
   ImGui.initForOpenGL wp glContext
   ImGui.openGL3Init "#version 110"
 
   loop window app
 
+  ImGui.destroyContext imguiContext
   SDL.destroyWindow window
   SDL.quit
 

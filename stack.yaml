@@ -3,5 +3,5 @@ resolver: lts-13.27
 packages:
   - .
 
-# extra-lib-dirs:
-#   - external/lib
+extra-lib-dirs:
+  - external/lib
