@@ -64,15 +64,32 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
   , `Float'
   } -> `()' #}
 
--- {#fun unsafe igSliderFloat2 as sliderFloat2
---   { `String'
---   , withArrayConvReal * `[Float]' peekIntegralArray2*
---   , `Float'
---   , `Float'
---   , `String'
---   , `Float'
---   } -> `()' #}
+{#fun unsafe igSliderFloat2 as sliderFloat2
+  { `String'
+  , withArrayConvReal * `[Float]' peekRealArray2*
+  , `Float'
+  , `Float'
+  , `String'
+  , `Float'
+  } -> `()' #}
 
+{#fun unsafe igSliderFloat3 as sliderFloat3
+  { `String'
+  , withArrayConvReal * `[Float]' peekRealArray3*
+  , `Float'
+  , `Float'
+  , `String'
+  , `Float'
+  } -> `()' #}
+
+{#fun unsafe igSliderFloat4 as sliderFloat4
+  { `String'
+  , withArrayConvReal * `[Float]' peekRealArray4*
+  , `Float'
+  , `Float'
+  , `String'
+  , `Float'
+  } -> `()' #}
 
 {#fun unsafe igSliderInt as sliderInt
   { `String'

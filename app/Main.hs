@@ -14,17 +14,21 @@ import           SDL.Vect
 import           Util
 
 data AppState = AppState {
-  asSlider :: Int
+  asSliderInt   :: Int,
+  asSliderFloat :: Float
 }
 
 draw :: AppState -> IO AppState
 draw state = do
   ImGui.showMetricsWindow True
   ImGui.begin "Window" 0 0
-  sliderValue <- ImGui.sliderInt "Slider1" (asSlider state)  1 100 "Stuff"
-  sliderValue2 <- ImGui.sliderInt2 "Slider2" [10, 20]  1 100 "Stuff"
+  sliderIntV <- ImGui.sliderInt "Slider int" (asSliderInt state)  1 100 ""
+  sliderFloatV <- ImGui.sliderFloat "Slider float" (asSliderFloat state)  1.0 100.0 "" 1.0
 
-  let newState = state { asSlider =  sliderValue }
+  let newState = state {
+    asSliderInt =  sliderIntV,
+    asSliderFloat = sliderFloatV
+  }
 
   ImGui.end
   pure newState
@@ -34,6 +38,7 @@ main = runImGuiApp $
   ImGuiApp {
     appDraw = draw,
     appState = AppState {
-      asSlider = 50
+      asSliderInt = 50,
+      asSliderFloat = 50.0
     }
   }
