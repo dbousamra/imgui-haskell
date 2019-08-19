@@ -1,5 +1,5 @@
-module Imgui (
-  module Imgui.Internal.Bindings
+module ImGui (
+  module ImGui.Internal.Bindings
 ) where
 
-import           Imgui.Internal.Bindings
+import           ImGui.Internal.Bindings

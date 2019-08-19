@@ -27,8 +27,8 @@ library:
   source-dirs: src
   build-tools: c2hs
   exposed-modules:
-    - Imgui
-    - Imgui.Internal.Bindings
+    - ImGui
+    - ImGui.Internal.Bindings
   dependencies:
     - sdl2
   c-sources:
