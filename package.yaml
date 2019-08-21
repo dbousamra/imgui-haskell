@@ -50,10 +50,24 @@ library:
     - -fPIC
 
 executables:
-  imgui-haskell-exe:
-    main: Main.hs
+  # imgui-example:
+  #   main: Misc.hs
+  #   source-dirs: app
+  #   ghc-options:
+  #     - -main-is Misc
+  #     - -threaded
+  #     - -rtsopts
+  #     - -with-rtsopts=-N
+  #   dependencies:
+  #     - imgui-haskell
+  #     - sdl2
+  #     - linear
+  #     - OpenGL
+  imgui-calculator:
+    main: Calculator.hs
     source-dirs: app
     ghc-options:
+      - -main-is Calculator
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N

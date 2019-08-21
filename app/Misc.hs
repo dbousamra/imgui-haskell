@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Main where
+module Misc (main) where
 
 import           Control.Monad             (unless)
 import qualified Graphics.Rendering.OpenGL as GL
@@ -17,28 +17,30 @@ data AppState = AppState {
   asSliderInt   :: Int,
   asSliderFloat :: Float,
   asSliderAngle :: Float,
-  asColorPicker :: [Float]
-}
+  asColorPicker :: [Float],
+  asButton      :: Bool
+} deriving (Eq, Show)
 
 draw :: AppState -> IO AppState
 draw state = do
   ImGui.showMetricsWindow True
 
-  style <- ImGui.getStyle
-  ImGui.showStyleEditor style
 
+  ImGui.begin "Window" False ImGui.ImGuiWindowFlags_None
+  (_, sliderIntV) <- ImGui.sliderInt "Slider int" (asSliderInt state)  1 100 ""
+  (_, sliderFloatV) <- ImGui.sliderFloat "Slider float" (asSliderFloat state)  1.0 100.0 "" 1.0
+  (_, sliderAngleV) <- ImGui.sliderAngle "Slider angle" (asSliderAngle state)  0.0 360.0 ""
+  (_, colorPickerV) <- ImGui.colorPicker3 "Color picker" (asColorPicker state) ImGui.ImGuiColorEditFlags_None
+  (buttonV) <- ImGui.button "Press me" (ImGui.makeImVec2 0 0)
+  ImGui.text $ "Button state = " ++ show buttonV
 
-  ImGui.begin "Window" 0 0
-  sliderIntV <- ImGui.sliderInt "Slider int" (asSliderInt state)  1 100 ""
-  sliderFloatV <- ImGui.sliderFloat "Slider float" (asSliderFloat state)  1.0 100.0 "" 1.0
-  sliderAngleV <- ImGui.sliderAngle "Slider angle" (asSliderAngle state)  0.0 360.0 ""
-  colorPickerV <- ImGui.colorPicker3 "Color picker" (asColorPicker state) ImGui.ImGuiColorEditFlags_None
 
   let newState = state {
     asSliderInt =  sliderIntV,
     asSliderFloat = sliderFloatV,
     asSliderAngle = sliderAngleV,
-    asColorPicker = colorPickerV
+    asColorPicker = colorPickerV,
+    asButton = buttonV
   }
 
 
@@ -53,6 +55,7 @@ main = runImGuiApp $
       asSliderInt = 50,
       asSliderFloat = 50.0,
       asSliderAngle = pi,
-      asColorPicker = [0.0, 0.0, 0.0]
+      asColorPicker = [0.0, 0.0, 0.0],
+      asButton = False
     }
   }

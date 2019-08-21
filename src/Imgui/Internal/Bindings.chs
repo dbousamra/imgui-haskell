@@ -12,7 +12,6 @@
 
 module ImGui.Internal.Bindings where
 
-
 import Foreign.C
 import Foreign.Ptr
 import Foreign.Storable
@@ -22,8 +21,13 @@ import Foreign.Marshal.Utils
 import Data.Maybe (fromMaybe)
 import Control.Monad (liftM)
 import qualified SDL.Raw.Types           as SDL
-import qualified SDL.Internal.Types           as SDL hiding (Window)
+import qualified SDL.Internal.Types      as SDL hiding (Window, Event)
 
+-- Enums
+{# enum ImGuiCol_ as ImGuiCol {} deriving (Show, Eq) #}
+{# enum ImGuiColorEditFlags_ as ImGuiColorEditFlags {} deriving (Show, Eq) #}
+{# enum ImGuiWindowFlags_ as ImGuiWindowFlags {} deriving (Show, Eq) #}
+{# enum ImGuiInputTextFlags_ as ImGuiInputTextFlags {} deriving (Show, Eq) #}
 
 {#pointer *ImVec2 as ImVec2Ptr foreign newtype#}
 {#pointer *ImVec4 as ImVec4Ptr foreign newtype#}
@@ -32,7 +36,18 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 {#pointer *ImGuiContext as ImGuiContext  #}
 {#pointer *ImGuiIO as ImGuiIO #}
 {#pointer *ImGuiStyle as ImGuiStyle #}
-{#pointer *ImGuiWindowFlags as ImGuiWindowFlags  #}
+{#pointer *ImGuiID as ImGuiID #}
+{#pointer *ImGuiInputTextCallback as ImGuiInputTextCallback #}
+
+-- ImGui impl functions
+{# fun gl3wInit as gl3wInit { } -> `()' #}
+{# fun ImGui_ImplOpenGL3_Init as openGL3Init { `String' } -> `Bool' #}
+{# fun ImGui_ImplOpenGL3_NewFrame as openGL3NewFrame { } -> `()' #}
+{# fun ImGui_ImplOpenGL3_RenderDrawData as openGL3RenderDrawData { `ImDrawData' } -> `()' #}
+{# fun ImGui_ImplSDL2_InitForOpenGL as initForOpenGL { castPtr `SDL.Window', castPtr `SDL.GLContext' } -> `Bool' #}
+{# fun ImGui_ImplSDL2_ProcessEvent as sdl2ProcessEvent { castPtr `Ptr SDL.Event' } -> `Bool' #}
+{# fun ImGui_ImplSDL2_NewFrame as sdl2NewFrame { castPtr `SDL.Window' } -> `()' #}
+{# fun ImGui_ImplSDL2_Shutdown as shutdown { } -> `()' #}
 
 -- Imgui functions
 {# fun igCreateContext as createContext_ { `ImFontAtlas' } -> `ImGuiContext' #}
@@ -53,124 +68,36 @@ import qualified SDL.Internal.Types           as SDL hiding (Window)
 {# fun igShowFontSelector as showFontSelector { `String' } -> `()' #}
 {# fun igShowUserGuide as showUserGuide { } -> `()' #}
 {# fun igGetVersion as getVersion { } -> `String' #}
-
-{# fun igBegin as begin { `String', `Int', `Int' } -> `()' #}
+{# fun igStyleColorsDark as styleColorsDark { `ImGuiStyle' } -> `()' #}
+{# fun igStyleColorsClassic as styleColorsClassic { `ImGuiStyle' } -> `()' #}
+{# fun igStyleColorsLight as styleColorsLight { `ImGuiStyle' } -> `()' #}
+{# fun igBegin as begin { `String', `Bool', `ImGuiWindowFlags' } -> `()' #}
 {# fun igEnd as end { } -> `()' #}
+{# fun igBeginChild as beginChild { `String', %`ImVec2Ptr', `Bool', `ImGuiWindowFlags' } -> `()' #}
+{# fun igBeginChildID as beginChildID { %`ImGuiID', %`ImVec2Ptr', `Bool', `ImGuiWindowFlags' } -> `()' #}
+{# fun igEndChild as endChild { } -> `()' #}
 {# fun igButton as button {`String', %`ImVec2Ptr'} -> `Bool'#}
 {# fun igText as text { `String' } -> `()' #}
-
-
-
-
 {# fun igPushStyleColor as pushStyleColor { cFromEnum `ImGuiCol', %`ImVec4Ptr' } -> `()' #}
 {# fun igPopStyleColor as popStyleColor { `Int' } -> `()' #}
-
-
-{#fun unsafe igSliderFloat as sliderFloat
-  { `String'
-  , `Float' peekReal*
-  , `Float'
-  , `Float'
-  , `String'
-  , `Float'
-  } -> `()' #}
-
-{#fun unsafe igSliderFloat2 as sliderFloat2
-  { `String'
-  , withArrayConvReal * `[Float]' peekRealArray2*
-  , `Float'
-  , `Float'
-  , `String'
-  , `Float'
-  } -> `()' #}
-
-{#fun unsafe igSliderFloat3 as sliderFloat3
-  { `String'
-  , withArrayConvReal * `[Float]' peekRealArray3*
-  , `Float'
-  , `Float'
-  , `String'
-  , `Float'
-  } -> `()' #}
-
-{#fun unsafe igSliderFloat4 as sliderFloat4
-  { `String'
-  , withArrayConvReal * `[Float]' peekRealArray4*
-  , `Float'
-  , `Float'
-  , `String'
-  , `Float'
-  } -> `()' #}
-
-{#fun unsafe igSliderAngle as sliderAngle
-  { `String'
-  , `Float' peekReal*
-  , `Float'
-  , `Float'
-  , `String'
-  } -> `()' #}
-
-{#fun unsafe igSliderInt as sliderInt
-  { `String'
-  , `Int' peekIntegral*
-  , `Int'
-  , `Int'
-  , `String'
-  } -> `()' #}
-
-{#fun unsafe igSliderInt2 as sliderInt2
-  { `String'
-  , withArrayConvIntegral * `[Int]' peekIntegralArray2*
-  , `Int'
-  , `Int'
-  , `String'
-  } -> `()' #}
-
-{#fun unsafe igSliderInt3 as sliderInt3
-  { `String'
-  , withArrayConvIntegral * `[Int]' peekIntegralArray3*
-  , `Int'
-  , `Int'
-  , `String'
-  } -> `()' #}
-
-{#fun unsafe igSliderInt4 as sliderInt4
-  { `String'
-  , withArrayConvIntegral * `[Int]' peekIntegralArray4*
-  , `Int'
-  , `Int'
-  , `String'
-  } -> `()' #}
-
-{#fun unsafe igColorPicker3 as colorPicker3
-  { `String'
-  , withArrayConvReal * `[Float]' peekRealArray3*
-  , cFromEnum `ImGuiColorEditFlags'
-  } -> `()' #}
-
-{#fun unsafe igColorPicker4 as colorPicker4
-  { `String'
-  , withArrayConvReal * `[Float]' peekRealArray4*
-  , cFromEnum `ImGuiColorEditFlags'
-  , `Float'
-  } -> `()' #}
+{# fun igInputText as inputText  { `String', `String' peekCString*, `Int', cFromEnum `ImGuiInputTextFlags', id `FunPtr (Ptr () -> IO CInt)' , `Ptr ()'  } -> `Bool' #}
+{# fun unsafe igSliderFloat as sliderFloat { `String', `Float' peekReal*, `Float', `Float', `String', `Float' } -> `Bool' #}
+{# fun unsafe igSliderFloat2 as sliderFloat2 { `String', withArrayConvReal * `[Float]' peekRealArray2*, `Float', `Float', `String', `Float' } -> `Bool' #}
+{# fun unsafe igSliderFloat3 as sliderFloat3 { `String', withArrayConvReal * `[Float]' peekRealArray3*, `Float', `Float', `String', `Float' } -> `Bool' #}
+{# fun unsafe igSliderFloat4 as sliderFloat4 { `String', withArrayConvReal * `[Float]' peekRealArray4*, `Float', `Float', `String', `Float' } -> `Bool' #}
+{# fun unsafe igSliderAngle as sliderAngle { `String', `Float' peekReal*, `Float', `Float', `String' } -> `Bool' #}
+{# fun unsafe igSliderInt as sliderInt { `String', `Int' peekIntegral*, `Int', `Int', `String' } -> `Bool' #}
+{# fun unsafe igSliderInt2 as sliderInt2 { `String', withArrayConvIntegral * `[Int]' peekIntegralArray2*, `Int', `Int', `String' } -> `Bool' #}
+{# fun unsafe igSliderInt3 as sliderInt3 { `String', withArrayConvIntegral * `[Int]' peekIntegralArray3*, `Int', `Int', `String' } -> `Bool' #}
+{# fun unsafe igSliderInt4 as sliderInt4 { `String', withArrayConvIntegral * `[Int]' peekIntegralArray4*, `Int', `Int', `String' } -> `Bool' #}
+{# fun unsafe igColorEdit3 as colorEdit3 { `String', withArrayConvReal * `[Float]' peekRealArray3*, cFromEnum `ImGuiColorEditFlags' } -> `Bool' #}
+{# fun unsafe igColorEdit4 as colorEdit4 { `String', withArrayConvReal * `[Float]' peekRealArray4*, cFromEnum `ImGuiColorEditFlags' } -> `Bool' #}
+{# fun unsafe igColorPicker3 as colorPicker3 { `String', withArrayConvReal * `[Float]' peekRealArray3*, cFromEnum `ImGuiColorEditFlags' } -> `Bool' #}
+{# fun unsafe igColorPicker4 as colorPicker4 { `String', withArrayConvReal * `[Float]' peekRealArray4*, cFromEnum `ImGuiColorEditFlags', `Float' } -> `Bool' #}
 
 -- Creating structs
 {# fun pure ImVec2_ImVec2Float as makeImVec2 {`Float', `Float'} -> `ImVec2Ptr'#}
 {# fun pure ImVec4_ImVec4Float as makeImVec4 {`Float', `Float', `Float', `Float'} -> `ImVec4Ptr'#}
-
--- ImGui Impl functions
-{# fun gl3wInit as gl3wInit { } -> `()' #}
-{# fun ImGui_ImplOpenGL3_Init as openGL3Init { `String' } -> `Bool' #}
-{# fun ImGui_ImplOpenGL3_NewFrame as openGL3NewFrame { } -> `()' #}
-{# fun ImGui_ImplOpenGL3_RenderDrawData as openGL3RenderDrawData { `ImDrawData' } -> `()' #}
-{# fun ImGui_ImplSDL2_InitForOpenGL as initForOpenGL { castPtr `SDL.Window', castPtr `SDL.GLContext' } -> `Bool' #}
-{# fun ImGui_ImplSDL2_NewFrame as sdl2NewFrame { castPtr `SDL.Window' } -> `()' #}
-{# fun ImGui_ImplSDL2_Shutdown as shutdown { } -> `()' #}
-
--- Enums
-{# enum ImGuiCol_ as ImGuiCol {} deriving (Show, Eq) #}
-{# enum ImGuiColorEditFlags_ as ImGuiColorEditFlags {} deriving (Show, Eq) #}
 
 -- High level functions
 createContext :: Maybe ImFontAtlas -> IO ImGuiContext
@@ -185,6 +112,9 @@ cFromEnum  = fromIntegral . fromEnum
 
 cToFloat :: (Real i, Fractional e) => i -> e
 cToFloat = realToFrac
+
+peekString :: Ptr CChar -> IO String
+peekString = peekCString
 
 peekIntegral :: (Integral a, Storable a, Integral b) => Ptr a -> IO b
 peekIntegral = (fromIntegral <$>) . peek
