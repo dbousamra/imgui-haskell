@@ -2,7 +2,7 @@ name: imgui-haskell
 version: 0.1.0.0
 github: "dbousamra/imgui-haskell"
 license: BSD3
-author: "Dominic Bou-Sa,ra"
+author: "Dominic Bou-Samra"
 maintainer: "dominic.bou.samra@gmail.com"
 copyright: "2019 Dominic Bou-Samra"
 
